@@ -28,19 +28,23 @@ def check_csv():
                  'workLocation', 'affiliation', 'extraInfo', 'image'])
 
 
+def safe_get(value: str) -> str:
+    return ' '.join(value.split())
+
+
 def get_row_from_result(result: dict) -> list:
-    name = result.get('name', '')
-    jobTitle = result.get('jobTitle', '')
-    gender = result.get('gender', '')
-    status = result.get('status', '')
-    annualSalary = result.get('currentAnnualSalary', '')
-    monthlySalary = result.get('currentMonthlySalary', '')
-    role = result.get('role', {}).get('name', '')
-    currentMemberOf = result.get('currentMemberOf', {}).get('name', '')
-    workLocation = result.get('workLocation', {}).get('name', '')
-    affiliation = result.get('affiliation', {}).get('name', '')
-    extraInfo = result.get('sameAs', '')
-    image = result.get('image', '')
+    name = safe_get(result.get('name', 'EMPTY'))
+    jobTitle = safe_get(result.get('jobTitle', 'EMPTY').replace(",", ";"))
+    gender = result.get('gender', 'EMPTY')
+    status = result.get('status', 'EMPTY')
+    annualSalary = result.get('currentAnnualSalary', 'EMPTY')
+    monthlySalary = result.get('currentMonthlySalary', 'EMPTY')
+    role = result.get('role', {}).get('name', 'EMPTY')
+    currentMemberOf = result.get('currentMemberOf', {}).get('name', 'EMPTY')
+    workLocation = result.get('workLocation', {}).get('name', 'EMPTY')
+    affiliation = result.get('affiliation', {}).get('name', 'EMPTY')
+    extraInfo = result.get('sameAs', 'EMPTY')
+    image = result.get('image', 'EMPTY')
     return [name, jobTitle, gender, status, annualSalary, monthlySalary, role, currentMemberOf, workLocation,
             affiliation,
             extraInfo, image]
@@ -60,7 +64,6 @@ if __name__ == '__main__':
     page = 1
     total_pages = 0
     final_page = False
-
     while not final_page:
         url = form_url(page, MAIN_URL)
         r = get_json(url)
